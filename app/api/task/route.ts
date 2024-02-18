@@ -16,3 +16,19 @@ export async function POST(req: Request) {
     return serverError();
   }
 }
+
+export async function DELETE(req: Request) {
+  try {
+    const parsed = Task.pick({ id: true }).parse(await req.json());
+    const deleted = await prisma.task.delete({
+      where: {
+        id: parsed.id,
+      },
+    });
+
+    return ok({ deleted: deleted.id });
+  } catch (error) {
+    log(error);
+    return serverError();
+  }
+}

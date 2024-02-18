@@ -11,7 +11,7 @@ export const ok = (data: any) => {
 };
 
 export const serverError = () => {
-  return new NextResponse(null, {
+  return new NextResponse("An Error Happened", {
     status: 500,
     statusText: "Error",
   });
