@@ -8,5 +8,6 @@ export const Task = z.object({
 });
 
 export const Project = z.object({
+  id: z.number().optional(),
   title: z.string(),
 });
