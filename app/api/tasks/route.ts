@@ -1,20 +1,11 @@
-import { NextRequest, NextResponse } from "next/server";
+import { ok, serverError } from "@/lib/http-response";
+import { prisma } from "@/lib/prisma";
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const request = await fetch(`https://dummyjson.om/todos`);
-    const result = await request.json();
-
-    return new NextResponse(JSON.stringify(result), {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      status: 200,
-      statusText: "OK",
-    });
-  } catch (error) {
-    return new NextResponse(null, {
-      status: 500,
-    });
+    const allTasks = await prisma.task.findMany();
+    return ok(allTasks);
+  } catch {
+    return serverError();
   }
 }
