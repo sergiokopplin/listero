@@ -1,7 +1,5 @@
 import { notFound, ok, serverError } from "@/lib/http-response";
 import { log } from "@/lib/log";
-import { prisma } from "@/lib/prisma";
-import { Project } from "@/lib/types";
 import { ProjectPrismaRepository } from "@/lib/db/repository/project-repository";
 
 const repository = new ProjectPrismaRepository();
