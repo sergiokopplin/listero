@@ -24,3 +24,32 @@ export async function GET(_: Request, context: { params: { id: number } }) {
     return serverError();
   }
 }
+
+export async function DELETE(_: Request, context: { params: { id: number } }) {
+  try {
+    const parsed = Project.pick({ id: true }).parse({
+      id: Number(context.params.id),
+    });
+
+    await prisma.task.deleteMany({
+      where: {
+        projectId: parsed.id,
+      },
+    });
+
+    const selectedProject = await prisma.project.delete({
+      where: {
+        id: parsed.id,
+      },
+    });
+
+    if (!selectedProject) {
+      return notFound();
+    }
+
+    return ok(selectedProject);
+  } catch (error) {
+    log(error);
+    return serverError();
+  }
+}
