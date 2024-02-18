@@ -9,6 +9,15 @@ export const ok = (data: any) => {
   });
 };
 
+export const created = (data: any) => {
+  return new NextResponse(JSON.stringify(data), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    status: 201,
+  });
+};
+
 export const notFound = () => {
   return new NextResponse("Not Found", {
     status: 404,
