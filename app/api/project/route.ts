@@ -1,15 +1,13 @@
 import { created, ok, serverError } from "@/lib/http-response";
 import { log } from "@/lib/log";
-import { prisma } from "@/lib/prisma";
-import { Project } from "@/lib/types";
+import { ProjectPrismaRepository } from "@/lib/db/repository/project-repository";
+
+const repository = new ProjectPrismaRepository();
 
 export async function POST(req: Request) {
   try {
-    const parsed = Project.parse(await req.json());
-    const create = await prisma.project.create({
-      data: parsed,
-    });
-
+    const data = await req.json();
+    const create = await repository.create(data);
     return created(create);
   } catch (error) {
     log(error);
@@ -19,16 +17,8 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const parsed = Project.pick({ id: true, title: true }).parse(
-      await req.json()
-    );
-    const updated = await prisma.project.update({
-      where: {
-        id: parsed.id,
-      },
-      data: parsed,
-    });
-
+    const data = await req.json();
+    const updated = await repository.update(data);
     return ok(updated);
   } catch (error) {
     log(error);
