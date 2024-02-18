@@ -5,7 +5,7 @@ import { Project } from "@/lib/types";
 
 export async function GET(
   _: Request,
-  context: { params: { projectId: number } }
+  context: { params: { projectId: string } }
 ) {
   try {
     const parsed = Project.pick({ id: true }).parse({
