@@ -4,6 +4,8 @@ import { z } from "zod";
 
 type ProjectType = z.infer<typeof Project>;
 
+// TODO: remove validation from repository
+
 export class ProjectPrismaRepository {
   async create({ title }: { title: string }): Promise<ProjectType | null> {
     const parsed = Project.parse({ title });

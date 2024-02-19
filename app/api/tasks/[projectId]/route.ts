@@ -3,6 +3,8 @@ import { log } from "@/lib/log";
 import { prisma } from "@/lib/prisma";
 import { Project } from "@/lib/types";
 
+// TODO: move to repository
+
 export async function GET(
   _: Request,
   context: { params: { projectId: string } }
