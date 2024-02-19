@@ -65,4 +65,8 @@ export class ProjectPrismaRepository {
     if (!selectedProject) return null;
     return selectedProject;
   }
+
+  async findAll(): Promise<ProjectType[] | null> {
+    return await prisma.project.findMany();
+  }
 }
