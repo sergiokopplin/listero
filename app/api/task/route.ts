@@ -1,17 +1,12 @@
+import { TaskPrismaRepository } from "@/lib/db/repository/task-repository";
 import { ok, created, serverError } from "@/lib/http-response";
 import { log } from "@/lib/log";
-import { prisma } from "@/lib/prisma";
-import { Task } from "@/lib/types";
 
-// TODO: move to repository
+const repository = new TaskPrismaRepository();
 
 export async function POST(req: Request) {
   try {
-    const parsed = Task.parse(await req.json());
-    const create = await prisma.task.create({
-      data: parsed,
-    });
-
+    const create = await repository.create(await req.json());
     return created(create);
   } catch (error) {
     log(error);
@@ -21,16 +16,7 @@ export async function POST(req: Request) {
 
 export async function PUT(req: Request) {
   try {
-    const parsed = Task.pick({ id: true, title: true, completed: true }).parse(
-      await req.json()
-    );
-    const updated = await prisma.task.update({
-      where: {
-        id: parsed.id,
-      },
-      data: parsed,
-    });
-
+    const updated = await repository.update(await req.json());
     return ok(updated);
   } catch (error) {
     log(error);
@@ -40,14 +26,8 @@ export async function PUT(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    const parsed = Task.pick({ id: true }).parse(await req.json());
-    const deleted = await prisma.task.delete({
-      where: {
-        id: parsed.id,
-      },
-    });
-
-    return ok({ deleted: deleted.id });
+    await repository.deleteById(await req.json());
+    return ok({});
   } catch (error) {
     log(error);
     return serverError();

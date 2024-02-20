@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-export const ok = (data: any) => {
+export const ok = (data?: any) => {
   return new NextResponse(JSON.stringify(data), {
     headers: {
       "Content-Type": "application/json",
