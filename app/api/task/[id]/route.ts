@@ -20,3 +20,17 @@ export async function GET(_: Request, context: { params: { id: string } }) {
     return serverError();
   }
 }
+
+export async function DELETE(_: Request, context: { params: { id: string } }) {
+  try {
+    const data = context.params.id;
+
+    await validation.deleteById(data);
+    const deleted = await repository.deleteById(data);
+    if (!deleted) return notFound();
+    return ok(deleted);
+  } catch (error) {
+    log(error);
+    return serverError();
+  }
+}

@@ -31,17 +31,3 @@ export async function PUT(req: Request) {
     return serverError();
   }
 }
-
-export async function DELETE(req: Request) {
-  try {
-    const data = await req.json();
-
-    await validation.deleteById(data);
-    const deleted = await repository.deleteById(data);
-    if (!deleted) return notFound();
-    return ok(deleted);
-  } catch (error) {
-    log(error);
-    return serverError();
-  }
-}

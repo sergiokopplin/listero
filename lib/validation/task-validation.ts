@@ -35,7 +35,7 @@ export class TaskValidation {
     });
   }
 
-  async deleteById({ id }: { id: string }): Promise<Pick<TaskType, "id">> {
+  async deleteById(id: string): Promise<Pick<TaskType, "id">> {
     return Types.TaskValidation.pick({ id: true }).parse({ id });
   }
 

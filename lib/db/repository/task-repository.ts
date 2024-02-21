@@ -41,7 +41,7 @@ export class TaskPrismaRepository {
     });
   }
 
-  async deleteById({ id }: { id: string }): Promise<Task | null> {
+  async deleteById(id: string): Promise<Task | null> {
     const selected = await prisma.task.findFirst({
       where: {
         id,
