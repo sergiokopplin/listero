@@ -1,5 +1,5 @@
 import { TaskPrismaRepository } from "@/lib/db/repository/task-repository";
-import { ok, created, serverError } from "@/lib/http-response";
+import { ok, created, serverError, notFound } from "@/lib/http-response";
 import { log } from "@/lib/log";
 import { TaskValidation } from "@/lib/validation/task-validation";
 
@@ -37,9 +37,9 @@ export async function DELETE(req: Request) {
     const data = await req.json();
 
     await validation.deleteById(data);
-    await repository.deleteById(data);
-
-    return ok({});
+    const deleted = await repository.deleteById(data);
+    if (!deleted) return notFound();
+    return ok(deleted);
   } catch (error) {
     log(error);
     return serverError();

@@ -42,6 +42,14 @@ export class TaskPrismaRepository {
   }
 
   async deleteById({ id }: { id: string }): Promise<Task | null> {
+    const selected = await prisma.task.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!selected) return null;
+
     return await prisma.task.delete({
       where: {
         id,
@@ -52,7 +60,7 @@ export class TaskPrismaRepository {
   async selectById(id: string): Promise<Task | null> {
     return await prisma.task.findFirst({
       where: {
-        id: id,
+        id,
       },
     });
   }
