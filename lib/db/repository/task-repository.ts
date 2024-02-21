@@ -10,7 +10,13 @@ export class TaskPrismaRepository {
     title: string;
     projectId: string;
     completed: boolean;
-  }): Promise<Task | null> {
+  }): Promise<(Task & { id: string }) | null> {
+    const selected = await prisma.project.findFirst({
+      where: {
+        id: projectId,
+      },
+    });
+    if (!selected) return null;
     return await prisma.task.create({
       data: {
         title,
@@ -28,7 +34,7 @@ export class TaskPrismaRepository {
     id: string;
     title: string;
     completed: boolean;
-  }): Promise<Task | null> {
+  }): Promise<(Task & { id: string }) | null> {
     return await prisma.task.update({
       where: {
         id: id,

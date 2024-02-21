@@ -2,7 +2,11 @@ import { Project } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
 
 export class ProjectPrismaRepository {
-  async create({ title }: { title: string }): Promise<Project | null> {
+  async create({
+    title,
+  }: {
+    title: string;
+  }): Promise<Project & { id: string }> {
     const created = await prisma.project.create({
       data: {
         title,
@@ -18,7 +22,7 @@ export class ProjectPrismaRepository {
   }: {
     id: string;
     title: string;
-  }): Promise<Project | null> {
+  }): Promise<(Project & { id: string }) | null> {
     const updated = await prisma.project.update({
       where: {
         id,
@@ -40,6 +44,13 @@ export class ProjectPrismaRepository {
   }
 
   async deleteById(id: string): Promise<Project | null> {
+    const selected = await prisma.project.findFirst({
+      where: {
+        id,
+      },
+    });
+
+    if (!selected) return null;
     await prisma.task.deleteMany({
       where: {
         projectId: id,

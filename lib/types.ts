@@ -23,3 +23,9 @@ export const ProjectValidation = z.object({
   id: z.string().optional(),
   title: z.string(),
 });
+
+export interface Log {
+  action: "CREATE" | "UPDATE" | "DELETE";
+  entityId: string;
+  entityType: "TASK" | "PROJECT";
+}

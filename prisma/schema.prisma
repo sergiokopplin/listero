@@ -20,3 +20,11 @@ model Project {
   title String
   Task  Task[]
 }
+
+model AuditLog {
+  id          String  @id @default(uuid())
+  action      String
+  entityId    String
+  entityType  String
+  createdAt   DateTime @default(now())
+}
