@@ -10,7 +10,7 @@ export async function GET(
 ) {
   try {
     const selected = await repository.selectByProjectId(
-      Number(context.params.projectId)
+      context.params.projectId
     );
     if (!selected) return notFound();
     return ok(selected);

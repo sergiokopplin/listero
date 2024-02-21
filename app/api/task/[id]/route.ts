@@ -4,9 +4,9 @@ import { log } from "@/lib/log";
 
 const repository = new TaskPrismaRepository();
 
-export async function GET(_: Request, context: { params: { id: number } }) {
+export async function GET(_: Request, context: { params: { id: string } }) {
   try {
-    const selected = await repository.selectById(Number(context.params.id));
+    const selected = await repository.selectById(context.params.id);
     if (!selected) return notFound();
     return ok(selected);
   } catch (error) {

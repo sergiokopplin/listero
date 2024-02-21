@@ -29,7 +29,7 @@ export class TaskPrismaRepository {
     title,
     completed,
   }: {
-    id: number;
+    id: string;
     title: string;
     completed: boolean;
   }): Promise<TaskType | null> {
@@ -45,7 +45,7 @@ export class TaskPrismaRepository {
     });
   }
 
-  async deleteById({ id }: { id: number }): Promise<TaskType | null> {
+  async deleteById({ id }: { id: string }): Promise<TaskType | null> {
     const parsed = Task.pick({ id: true }).parse({ id });
     return await prisma.task.delete({
       where: {
@@ -54,7 +54,7 @@ export class TaskPrismaRepository {
     });
   }
 
-  async selectById(id: number): Promise<TaskType | null> {
+  async selectById(id: string): Promise<TaskType | null> {
     const parsed = Task.pick({ id: true }).parse({ id });
     return await prisma.task.findFirst({
       where: {
@@ -63,7 +63,7 @@ export class TaskPrismaRepository {
     });
   }
 
-  async selectByProjectId(projectId: number): Promise<TaskType[] | null> {
+  async selectByProjectId(projectId: string): Promise<TaskType[] | null> {
     const parsed = Project.pick({ id: true }).parse({
       id: projectId,
     });

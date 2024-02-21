@@ -18,7 +18,7 @@ export class ProjectPrismaRepository {
     id,
     title,
   }: {
-    id: number;
+    id: string;
     title: string;
   }): Promise<ProjectType | null> {
     const parsed = Project.pick({ id: true, title: true }).parse({ id, title });
@@ -32,9 +32,7 @@ export class ProjectPrismaRepository {
   }
 
   async selectById(id: string): Promise<ProjectType | null> {
-    const parsed = Project.pick({ id: true }).parse({
-      id: Number(id),
-    });
+    const parsed = Project.pick({ id: true }).parse({ id });
     const selected = await prisma.project.findFirst({
       where: {
         id: parsed.id,
@@ -46,9 +44,7 @@ export class ProjectPrismaRepository {
   }
 
   async deleteById(id: string): Promise<ProjectType | null> {
-    const parsed = Project.pick({ id: true }).parse({
-      id: Number(id),
-    });
+    const parsed = Project.pick({ id: true }).parse({ id });
     await prisma.task.deleteMany({
       where: {
         projectId: parsed.id,
