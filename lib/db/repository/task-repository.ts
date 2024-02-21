@@ -1,8 +1,5 @@
-import { Project, Task } from "@/lib/types";
+import { Task } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
-
-type TaskType = z.infer<typeof Task>;
 
 export class TaskPrismaRepository {
   async create({
@@ -13,14 +10,13 @@ export class TaskPrismaRepository {
     title: string;
     projectId: string;
     completed: boolean;
-  }): Promise<TaskType | null> {
-    const parsed = Task.pick({
-      completed: true,
-      projectId: true,
-      title: true,
-    }).parse({ title, projectId, completed });
+  }): Promise<Task | null> {
     return await prisma.task.create({
-      data: parsed,
+      data: {
+        title,
+        projectId,
+        completed,
+      },
     });
   }
 
@@ -32,44 +28,39 @@ export class TaskPrismaRepository {
     id: string;
     title: string;
     completed: boolean;
-  }): Promise<TaskType | null> {
-    const parsed = Task.pick({ title: true, completed: true }).parse({
-      title,
-      completed,
-    });
+  }): Promise<Task | null> {
     return await prisma.task.update({
       where: {
         id: id,
       },
-      data: parsed,
+      data: {
+        id,
+        title,
+        completed,
+      },
     });
   }
 
-  async deleteById({ id }: { id: string }): Promise<TaskType | null> {
-    const parsed = Task.pick({ id: true }).parse({ id });
+  async deleteById({ id }: { id: string }): Promise<Task | null> {
     return await prisma.task.delete({
       where: {
-        id: parsed.id,
+        id,
       },
     });
   }
 
-  async selectById(id: string): Promise<TaskType | null> {
-    const parsed = Task.pick({ id: true }).parse({ id });
+  async selectById(id: string): Promise<Task | null> {
     return await prisma.task.findFirst({
       where: {
-        id: parsed.id,
+        id: id,
       },
     });
   }
 
-  async selectByProjectId(projectId: string): Promise<TaskType[] | null> {
-    const parsed = Project.pick({ id: true }).parse({
-      id: projectId,
-    });
+  async selectByProjectId(projectId: string): Promise<Task[] | null> {
     return await prisma.task.findMany({
       where: {
-        projectId: parsed.id,
+        projectId,
       },
     });
   }

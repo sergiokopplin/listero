@@ -1,14 +1,12 @@
 import { Project } from "@/lib/types";
 import { prisma } from "@/lib/prisma";
-import { z } from "zod";
-
-type ProjectType = z.infer<typeof Project>;
 
 export class ProjectPrismaRepository {
-  async create({ title }: { title: string }): Promise<ProjectType | null> {
-    const parsed = Project.parse({ title });
+  async create({ title }: { title: string }): Promise<Project | null> {
     const created = await prisma.project.create({
-      data: parsed,
+      data: {
+        title,
+      },
     });
 
     return created;
@@ -20,22 +18,20 @@ export class ProjectPrismaRepository {
   }: {
     id: string;
     title: string;
-  }): Promise<ProjectType | null> {
-    const parsed = Project.pick({ id: true, title: true }).parse({ id, title });
+  }): Promise<Project | null> {
     const updated = await prisma.project.update({
       where: {
-        id: parsed.id,
+        id,
       },
-      data: parsed,
+      data: { id, title },
     });
     return updated;
   }
 
-  async selectById(id: string): Promise<ProjectType | null> {
-    const parsed = Project.pick({ id: true }).parse({ id });
+  async selectById(id: string): Promise<Project | null> {
     const selected = await prisma.project.findFirst({
       where: {
-        id: parsed.id,
+        id,
       },
     });
 
@@ -43,16 +39,15 @@ export class ProjectPrismaRepository {
     return selected;
   }
 
-  async deleteById(id: string): Promise<ProjectType | null> {
-    const parsed = Project.pick({ id: true }).parse({ id });
+  async deleteById(id: string): Promise<Project | null> {
     await prisma.task.deleteMany({
       where: {
-        projectId: parsed.id,
+        projectId: id,
       },
     });
     const selectedProject = await prisma.project.delete({
       where: {
-        id: parsed.id,
+        id,
       },
     });
 
@@ -60,7 +55,7 @@ export class ProjectPrismaRepository {
     return selectedProject;
   }
 
-  async findAll(): Promise<ProjectType[] | null> {
+  async findAll(): Promise<Project[] | null> {
     return await prisma.project.findMany();
   }
 }
